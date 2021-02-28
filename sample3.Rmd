@@ -1,0 +1,115 @@
+---
+title: "sample3"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+    code_folding: hide
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+# インタラクティブなグラフ{.tabset}
+
+## 通常のグラフ
+
+```{r}
+library(ggplot2)
+library(plotly)
+iris %>%
+  ggplot(aes(Sepal.Length, Sepal.Width)) + 
+  geom_point()
+```
+
+<br><br><br>
+
+## インタラクティブなグラフ
+
+```{r}
+p <- iris %>%
+  ggplot(aes(Sepal.Length, Sepal.Width)) + 
+  geom_point() 
+ggplotly(p)
+```
+
+<br><br><br>
+
+# データ数が多いインタラクティブな表{.tabset}
+
+## datatableを使用した表
+
+```{r}
+library(DT)
+iris %>% datatable()
+```
+
+<br><br><br>
+
+## datatableの設定を変えて見やすくした表
+
+```{r}
+iris %>% 
+  datatable(filter='top', # 各項目の上に検索できる機能
+            class="compact", # 表をコンパクトに
+            options = list(
+              paging = FALSE, # ページ機能をなくす
+              scrollY = 400, # スクロールをできる機能
+              columnDefs = list(list(className = 'd t-left', targets = "_all")) # 左揃え
+              )
+            )
+```
+
+<br><br><br>
+
+## datatableに色を加えた表
+
+```{r}
+iris %>% 
+  datatable(filter='top', # 各項目の上に検索できる機能
+            class="compact", # 表をコンパクトに
+            options = list(
+              paging = FALSE, # ページ機能をなくす
+              scrollY = 400, # スクロールをできる機能
+              columnDefs = list(list(className = 'd t-left', targets = "_all")) # 左揃え
+              )
+            )　%>%
+  formatStyle("Species", backgroundColor = styleEqual("setosa", "yellow")) %>%
+  formatStyle("Sepal.Length", background = styleInterval(5, c("pink", "red")))
+```
+
+<br><br><br>
+
+# データ数が少ないインタラクティブな表{.tabset}
+
+## kableを使用した表
+
+```{r}
+library(knitr)
+iris %>% head() %>% kable()
+```
+
+<br><br><br>
+
+## gtを使用した表
+
+```{r}
+library(gt)
+iris %>% head() %>% gt()
+```
+
+<br><br><br>
